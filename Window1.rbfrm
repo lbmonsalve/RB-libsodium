@@ -27,7 +27,7 @@ Begin Window Window1
    Begin BevelButton BevelButton1
       AcceptFocus     =   False
       AutoDeactivate  =   True
-      BackColor       =   &c00000000
+      BackColor       =   "&c00000000"
       Bevel           =   0
       Bold            =   False
       ButtonType      =   0
@@ -58,7 +58,7 @@ Begin Window Window1
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextColor       =   &c00000000
+      TextColor       =   "&c00000000"
       TextFont        =   "System"
       TextSize        =   ""
       TextUnit        =   0
@@ -124,54 +124,54 @@ End
 		Sub Action()
 		  TextArea1.AppendText "libsodium version: "+ libsodium.Version.VersionString+ EndOfLine+ EndOfLine
 		  
-		  TextArea1.AppendText "Read secure memory..."+ EndOfLine
-		  Dim mb As New SecureMemoryBlock(64) ' allocate 64 bytes
-		  mb.CString(0) = "Hello, world!"
-		  TextArea1.AppendText mb.CString(0)+ EndOfLine ' read data
-		  TextArea1.AppendText EndOfLine
-		  
-		  TextArea1.AppendText "Password hashing/Verify a hash"+ EndOfLine
-		  Dim pw As libsodium.Password = "seekrit"
-		  Dim hash As String = pw.GenerateHash()
-		  If pw.VerifyHash(hash) Then
-		    TextArea1.AppendText "verify a password: OK "+ "hash: """+ hash+ """"+ EndOfLine
-		  Else
-		    TextArea1.AppendText "Bad password!"
-		  End If
-		  TextArea1.AppendText EndOfLine
-		  
-		  TextArea1.AppendText "Generic hashing/BLAKE2b:"+ EndOfLine
-		  Dim f As FolderItem = GetOpenFolderItem("")
-		  If f Is Nil Then
-		    TextArea1.AppendText "no file!"+ EndOfLine
-		  Else
-		    Dim bs As BinaryStream = BinaryStream.Open(f)
-		    Dim h As New libsodium.GenericHashDigest()
-		    Do Until bs.EOF
-		      h.Process(bs.Read(4096))
-		    Loop
-		    Dim hashValue As String= libsodium.EncodeHex(h.Value)
-		    TextArea1.AppendText f.Name+ " hash: "+ hashValue+ EndOfLine
-		  End If
-		  TextArea1.AppendText EndOfLine
-		  
-		  TextArea1.AppendText "Generic hashing/SHA512:"+ EndOfLine
-		  f= GetOpenFolderItem("")
-		  If f Is Nil Then
-		    TextArea1.AppendText "no file!"+ EndOfLine
-		  Else
-		    Dim bs As BinaryStream = BinaryStream.Open(f)
-		    Dim h As New libsodium.GenericHashDigest(libsodium.HashType.SHA512)
-		    Do Until bs.EOF
-		      h.Process(bs.Read(4096))
-		    Loop
-		    Dim hashValue As String= libsodium.EncodeHex(h.Value)
-		    TextArea1.AppendText f.Name+ " hash: "+ hashValue+ EndOfLine
-		  End If
-		  TextArea1.AppendText EndOfLine
+		  'TextArea1.AppendText "Read secure memory..."+ EndOfLine
+		  'Dim mb As New SecureMemoryBlock(64) ' allocate 64 bytes
+		  'mb.CString(0) = "Hello, world!"
+		  'TextArea1.AppendText mb.CString(0)+ EndOfLine ' read data
+		  'TextArea1.AppendText EndOfLine
+		  '
+		  'TextArea1.AppendText "Password hashing/Verify a hash"+ EndOfLine
+		  'Dim pw As libsodium.Password = "seekrit"
+		  'Dim hash As String = pw.GenerateHash()
+		  'If pw.VerifyHash(hash) Then
+		  'TextArea1.AppendText "verify a password: OK "+ "hash: """+ hash+ """"+ EndOfLine
+		  'Else
+		  'TextArea1.AppendText "Bad password!"
+		  'End If
+		  'TextArea1.AppendText EndOfLine
+		  '
+		  'TextArea1.AppendText "Generic hashing/BLAKE2b:"+ EndOfLine
+		  'Dim f As FolderItem = GetOpenFolderItem("")
+		  'If f Is Nil Then
+		  'TextArea1.AppendText "no file!"+ EndOfLine
+		  'Else
+		  'Dim bs As BinaryStream = BinaryStream.Open(f)
+		  'Dim h As New libsodium.GenericHashDigest()
+		  'Do Until bs.EOF
+		  'h.Process(bs.Read(4096))
+		  'Loop
+		  'Dim hashValue As String= libsodium.EncodeHex(h.Value)
+		  'TextArea1.AppendText f.Name+ " hash: "+ hashValue+ EndOfLine
+		  'End If
+		  'TextArea1.AppendText EndOfLine
+		  '
+		  'TextArea1.AppendText "Generic hashing/SHA512:"+ EndOfLine
+		  'f= GetOpenFolderItem("")
+		  'If f Is Nil Then
+		  'TextArea1.AppendText "no file!"+ EndOfLine
+		  'Else
+		  'Dim bs As BinaryStream = BinaryStream.Open(f)
+		  'Dim h As New libsodium.GenericHashDigest(libsodium.HashType.SHA512)
+		  'Do Until bs.EOF
+		  'h.Process(bs.Read(4096))
+		  'Loop
+		  'Dim hashValue As String= libsodium.EncodeHex(h.Value)
+		  'TextArea1.AppendText f.Name+ " hash: "+ hashValue+ EndOfLine
+		  'End If
+		  'TextArea1.AppendText EndOfLine
 		  
 		  TextArea1.AppendText "PKI Encryption:"+ EndOfLine
-		  TextArea1.AppendText "Key exchange: X25519, Encryption: XSalsa20, Authentication: Poly1305 MAC"+ EndOfLine
+		  TextArea1.AppendText "Key exchange: X25519, Encryption: XSalsa20, Signatures: Ed25519, Authentication: Poly1305 MAC"+ EndOfLine
 		  // Generate a new random encryption key:
 		  Dim key As libsodium.PKI.EncryptionKey
 		  key = key.Generate()

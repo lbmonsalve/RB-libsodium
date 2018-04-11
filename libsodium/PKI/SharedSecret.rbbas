@@ -36,12 +36,12 @@ Inherits libsodium.SKI.KeyContainer
 		  ' WARNING: THIS IS (PROBABLY) NOT THE METHOD YOU'RE LOOKING FOR. You probably
 		  ' want Constructor(TheirPublicKey, YourPrivateKey)
 		  '
-		  ' This method computes a shared secret (NOT a key) given a SenderPrivateKey and 
-		  ' RecipientPublicKey. The return value represents the X coordinate of a point on 
-		  ' the curve. As a result, the number of possible keys is limited to the group 
-		  ' size (≈2^252), and the key distribution is not uniform. 
+		  ' This method computes a shared secret (NOT a key) given a SenderPrivateKey and
+		  ' RecipientPublicKey. The return value represents the X coordinate of a point on
+		  ' the curve. As a result, the number of possible keys is limited to the group
+		  ' size (≈2^252), and the key distribution is not uniform.
 		  '
-		  ' For this reason, instead of directly using the return value as a shared key, 
+		  ' For this reason, instead of directly using the return value as a shared key,
 		  ' it is recommended to use:
 		  '
 		  '    GenericHash(return value + RecipientPublicKey + Sender's PUBLIC KEY)

@@ -112,13 +112,23 @@ Inherits libsodium.PKI.KeyPair
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Derive(Context As String= "_Default", SubkeyLen As UInt8= 32) As libsodium.PKI.EncryptionKey
+		Function Derive(Context As String = "_Default", SubkeyLen As UInt8 = 32) As libsodium.PKI.EncryptionKey
 		  ' The  crypto_kdf  API can derive up to 2^64 keys from a single master key and context, and individual subkeys can
 		  ' have an arbitrary length between 128 (16 bytes) and 512 bits (64 bytes).
 		  ' https://download.libsodium.org/doc/key_derivation/
 		  
 		  Static subkeyId As UInt64
 		  subkeyId= subkeyId+ 1
+		  
+		  Return Derive(subkeyId, Context, SubkeyLen)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Derive(SubkeyId As UInt64, Context As String = "_Default", SubkeyLen As UInt8 = 32) As libsodium.PKI.EncryptionKey
+		  ' The  crypto_kdf  API can derive up to 2^64 keys from a single master key and context, and individual subkeys can
+		  ' have an arbitrary length between 128 (16 bytes) and 512 bits (64 bytes).
+		  ' https://download.libsodium.org/doc/key_derivation/
 		  
 		  Dim subkey As New MemoryBlock(SubkeyLen)
 		  If crypto_kdf_derive_from_key(subkey, subkey.Size, SubkeyId, Context, PrivateKey) = 0 Then

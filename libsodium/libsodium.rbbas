@@ -481,7 +481,7 @@ Protected Module libsodium
 
 	#tag Method, Flags = &h1
 		Protected Function SHA512(InputData As MemoryBlock, HMACKey As MemoryBlock = Nil) As String
-		  ' Generates a SHA256 digest of the InputData
+		  ' Generates a SHA512 digest of the InputData
 		  ' https://download.libsodium.org/doc/advanced/sha-2_hash_function.html
 		  
 		  Dim h As New GenericHashDigest(HashType.SHA512, HMACKey)
@@ -715,6 +715,13 @@ Protected Module libsodium
 		Sensitive
 		  Moderate
 		Interactive
+	#tag EndEnum
+
+	#tag Enum, Name = StreamType, Type = Integer, Flags = &h1
+		ChaCha20
+		  XChaCha20
+		  Salsa20
+		XSalsa20
 	#tag EndEnum
 
 

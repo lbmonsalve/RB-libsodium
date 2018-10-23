@@ -25,7 +25,7 @@ Protected Module Exporting
 		Protected Function EncodeMessage(BinaryMessage As MemoryBlock, Optional Nonce As MemoryBlock) As MemoryBlock
 		  ' This method takes a raw binary message and encodes it in a plain text
 		  ' format that is suitable to be stored or transferred. If a Nonce is
-		  ' specified then then the message was encrypted using the nonce and the 
+		  ' specified then then the message was encrypted using the nonce and the
 		  ' nonce is encoded in the return value.
 		  
 		  Dim data As New MemoryBlock(0)

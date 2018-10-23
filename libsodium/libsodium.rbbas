@@ -75,6 +75,10 @@ Protected Module libsodium
 	#tag EndMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub crypto_aead_aes256gcm_keygen Lib "libsodium" (Buffer As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function crypto_generichash_final Lib "libsodium" (State As Ptr, OutputBuffer As Ptr, OutputSize As UInt32) As Int32
 	#tag EndExternalMethod
 
@@ -489,8 +493,8 @@ Protected Module libsodium
 	#tag Method, Flags = &h1
 		Protected Function ShortHash(InputData As MemoryBlock, Key As MemoryBlock) As UInt64
 		  ' Generates a 64-bit (8-byte) hash of the InputData using the specified key. The
-		  ' output is a short but unpredictable (without knowing the secret key) value 
-		  ' suitable for picking a list in a hash table for a given key. The Key must be 
+		  ' output is a short but unpredictable (without knowing the secret key) value
+		  ' suitable for picking a list in a hash table for a given key. The Key must be
 		  ' exactly 16 bytes in size. This hash function should not be considered to be
 		  ' collision resistant.
 		  '
@@ -599,7 +603,7 @@ Protected Module libsodium
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ZeroFill(Extends mb As MemoryBlock, Offset As Int32 = 0, Length As Int32 = -1)
+		Sub ZeroFill(Extends mb As MemoryBlock, Offset As Int32 = 0, Length As Int32 = - 1)
 		  ' Overwrites the data in the MemoryBlock with zeroes.
 		  
 		  If mb = Nil Then Return

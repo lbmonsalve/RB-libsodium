@@ -69,13 +69,23 @@ Inherits libsodium.SKI.KeyContainer
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		 Shared Function Generate() As libsodium.SKI.SecretKey
+		 Shared Function Generate(constructionType As TypeConstruction= TypeConstruction.XSalsa20_Poly1305) As libsodium.SKI.SecretKey
 		  ' Returns unpredictable bytes that are suitable to be used as a secret key.
 		  '
 		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.SecretKey.Generate
 		  
-		  Return New libsodium.SKI.SecretKey(RandomBytes(crypto_secretbox_KEYBYTES))
+		  If constructionType= TypeConstruction.XSalsa20_Poly1305 Then
+		    Return New libsodium.SKI.SecretKey(RandomBytes(crypto_secretbox_KEYBYTES))
+		  ElseIf constructionType= TypeConstruction.ChaCha20_Poly1305 Then
+		    Return New libsodium.SKI.SecretKey(RandomBytes(crypto_aead_chacha20poly1305_KEYBYTES))
+		  ElseIf constructionType= TypeConstruction.ChaCha20_Poly1305_IETF Then
+		    Return New libsodium.SKI.SecretKey(RandomBytes(crypto_aead_chacha20poly1305_ietf_KEYBYTES))
+		  ElseIf constructionType= TypeConstruction.XChaCha20_Poly1305_IETF Then
+		    Return New libsodium.SKI.SecretKey(RandomBytes(crypto_aead_xchacha20poly1305_ietf_KEYBYTES))
+		  ElseIf constructionType= TypeConstruction.AES256_GCM Then
+		    Return New libsodium.SKI.SecretKey(RandomBytes(crypto_aead_aes256gcm_KEYBYTES))
+		  End If
 		End Function
 	#tag EndMethod
 
@@ -114,13 +124,23 @@ Inherits libsodium.SKI.KeyContainer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function RandomNonce() As MemoryBlock
+		 Shared Function RandomNonce(constructionType As TypeConstruction= TypeConstruction.XSalsa20_Poly1305) As MemoryBlock
 		  ' Returns unpredictable bytes that are suitable to be used as a Nonce.
 		  '
 		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.SecretKey.RandomNonce
 		  
-		  Return RandomBytes(crypto_secretbox_NONCEBYTES)
+		  If constructionType= TypeConstruction.XSalsa20_Poly1305 Then
+		    Return RandomBytes(crypto_secretbox_NONCEBYTES)
+		  ElseIf constructionType= TypeConstruction.ChaCha20_Poly1305 Then
+		    Return RandomBytes(crypto_aead_chacha20poly1305_NPUBBYTES)
+		  ElseIf constructionType= TypeConstruction.ChaCha20_Poly1305_IETF Then
+		    Return RandomBytes(crypto_aead_chacha20poly1305_ietf_NPUBBYTES)
+		  ElseIf constructionType= TypeConstruction.XChaCha20_Poly1305_IETF Then
+		    Return RandomBytes(crypto_aead_xchacha20poly1305_ietf_NPUBBYTES)
+		  ElseIf constructionType= TypeConstruction.AES256_GCM Then
+		    Return RandomBytes(crypto_aead_aes256gcm_NPUBBYTES)
+		  End If
 		End Function
 	#tag EndMethod
 

@@ -124,6 +124,41 @@ End
 		Sub Action()
 		  TextArea1.AppendText "libsodium version: "+ libsodium.Version.VersionString+ EndOfLine+ EndOfLine
 		  
+		  TextArea1.AppendText "SKI Encryption AEAD:"+ EndOfLine
+		  
+		  If libsodium.Version.HasAESNI And libsodium.Version.HasPCLMul And libsodium.Version.HasAES256GCM Then
+		    TextArea1.AppendText "AES256GCM:"+ EndOfLine
+		    'Dim key As libsodium.SKI.SecretKey
+		    'key = key.Generate(libsodium.SKI.TypeConstruction.AES256_GCM) ' random key for example
+		    'Dim nonce As MemoryBlock = key.RandomNonce(libsodium.SKI.TypeConstruction.AES256_GCM) ' must be stored/sent with the message
+		    'Dim ciphertext As MemoryBlock = libsodium.SKI.EncryptData("test", "123456", key, nonce, False, libsodium.SKI.TypeConstruction.AES256_GCM)
+		    'Dim cleartext As MemoryBlock = libsodium.SKI.DecryptData(ciphertext, "123456", key, nonce, libsodium.SKI.TypeConstruction.AES256_GCM)
+		    'Break
+		  End If
+		  
+		  TextArea1.AppendText "ChaCha20_Poly1305:"+ EndOfLine
+		  Dim key As libsodium.SKI.SecretKey
+		  key = key.Generate(libsodium.SKI.TypeConstruction.ChaCha20_Poly1305) ' random key for example
+		  Dim nonce As MemoryBlock = key.RandomNonce(libsodium.SKI.TypeConstruction.ChaCha20_Poly1305) ' must be stored/sent with the message
+		  Dim ciphertext As MemoryBlock = libsodium.SKI.EncryptData("test", "123456", key, nonce)
+		  Dim cleartext As MemoryBlock = libsodium.SKI.DecryptData(ciphertext, "123456", key, nonce)
+		  Break
+		  
+		  TextArea1.AppendText "ChaCha20_Poly1305_IETF:"+ EndOfLine
+		  key = key.Generate(libsodium.SKI.TypeConstruction.ChaCha20_Poly1305_IETF) ' random key for example
+		  nonce = key.RandomNonce(libsodium.SKI.TypeConstruction.ChaCha20_Poly1305_IETF) ' must be stored/sent with the message
+		  ciphertext = libsodium.SKI.EncryptData("test", "123456", key, nonce, False, libsodium.SKI.TypeConstruction.ChaCha20_Poly1305_IETF)
+		  cleartext = libsodium.SKI.DecryptData(ciphertext, "123456", key, nonce, libsodium.SKI.TypeConstruction.ChaCha20_Poly1305_IETF)
+		  Break
+		  
+		  TextArea1.AppendText "XChaCha20_Poly1305_IETF:"+ EndOfLine
+		  key = key.Generate(libsodium.SKI.TypeConstruction.XChaCha20_Poly1305_IETF) ' random key for example
+		  nonce = key.RandomNonce(libsodium.SKI.TypeConstruction.XChaCha20_Poly1305_IETF) ' must be stored/sent with the message
+		  ciphertext = libsodium.SKI.EncryptData("test", "123456", key, nonce, False, libsodium.SKI.TypeConstruction.XChaCha20_Poly1305_IETF)
+		  cleartext = libsodium.SKI.DecryptData(ciphertext, "123456", key, nonce, libsodium.SKI.TypeConstruction.XChaCha20_Poly1305_IETF)
+		  Break
+		  
+		  
 		  'TextArea1.AppendText "Read secure memory..."+ EndOfLine
 		  'Dim mb As New SecureMemoryBlock(64) ' allocate 64 bytes
 		  'mb.CString(0) = "Hello, world!"
@@ -170,67 +205,68 @@ End
 		  'End If
 		  'TextArea1.AppendText EndOfLine
 		  
-		  TextArea1.AppendText "PKI Encryption:"+ EndOfLine
-		  TextArea1.AppendText "Key exchange: X25519, Encryption: XSalsa20, Signatures: Ed25519, Authentication: Poly1305 MAC"+ EndOfLine
-		  // Generate a new random encryption key:
-		  Dim key As libsodium.PKI.EncryptionKey
-		  key = key.Generate()
 		  
-		  // Generate a new encryption key from a seed:
-		  key = key.Generate(key.RandomSeed)
-		  
-		  // Generate a new encryption key from a password (PBKDF2):
-		  Dim passwd As libsodium.Password = "seekritpassword"
-		  key= New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
-		  
-		  // Encrypt data:
-		  Dim mykey As libsodium.PKI.EncryptionKey
-		  mykey = mykey.Generate() ' random key for example
-		  Dim theirkey As New libsodium.PKI.ForeignKey(mykey.Generate) ' the recipient's public key, random for example
-		  
-		  Dim nonce As MemoryBlock = mykey.RandomNonce ' must be stored/sent with the message
-		  
-		  Const kHelloWorld= "Hello, world!"
-		  
-		  Dim crypttext As MemoryBlock = libsodium.PKI.EncryptData(kHelloWorld, theirkey, mykey, nonce)
-		  
-		  // Decrypt data
-		  Dim cleartext As MemoryBlock = libsodium.PKI.DecryptData(crypttext, theirkey, mykey, nonce)
-		  
-		  If cleartext.StringValue(0, cleartext.Size)= kHelloWorld Then
-		    TextArea1.AppendText "ok!"+ EndOfLine
-		  Else
-		    TextArea1.AppendText "no match!"+ EndOfLine
-		  End If
-		  TextArea1.AppendText EndOfLine
-		  
-		  TextArea1.AppendText "PKI Encryption/Calculate the shared key:"+ EndOfLine
-		  mykey = mykey.Generate() ' random key for example
-		  Dim sharedkey As New libsodium.PKI.SharedSecret(theirkey, mykey)
-		  Call sharedkey.Export SpecialFolder.Desktop.Child("sharedkey.key"), Nil, True
-		  TextArea1.AppendText "ok!"+ EndOfLine
-		  TextArea1.AppendText EndOfLine
-		  
-		  TextArea1.AppendText "PKI Encryption/Public-key authenticated encryption:"+ EndOfLine
-		  Dim alice_secretkey As New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
-		  Dim alice_publickey As New libsodium.PKI.ForeignKey(alice_secretkey)
-		  
-		  Dim bob_secretkey As New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
-		  Dim bob_publickey As New libsodium.PKI.ForeignKey(bob_secretkey)
-		  
-		  // exchange public keys...
-		  Dim bob_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(bob_publickey.Export)
-		  Dim alice_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(alice_publickey.Export)
-		  
-		  crypttext= libsodium.PKI.EncryptData(kHelloWorld, bob_publickey_exchange, alice_secretkey, nonce)
-		  cleartext= libsodium.PKI.DecryptData(crypttext, alice_publickey_exchange, bob_secretkey, nonce)
-		  
-		  If cleartext.StringValue(0, cleartext.Size)= kHelloWorld Then
-		    TextArea1.AppendText "ok!"+ EndOfLine
-		  Else
-		    TextArea1.AppendText "no match!"+ EndOfLine
-		  End If
-		  TextArea1.AppendText EndOfLine
+		  'TextArea1.AppendText "PKI Encryption:"+ EndOfLine
+		  'TextArea1.AppendText "Key exchange: X25519, Encryption: XSalsa20, Signatures: Ed25519, Authentication: Poly1305 MAC"+ EndOfLine
+		  '// Generate a new random encryption key:
+		  'Dim key As libsodium.PKI.EncryptionKey
+		  'key = key.Generate()
+		  '
+		  '// Generate a new encryption key from a seed:
+		  'key = key.Generate(key.RandomSeed)
+		  '
+		  '// Generate a new encryption key from a password (PBKDF2):
+		  'Dim passwd As libsodium.Password = "seekritpassword"
+		  'key= New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
+		  '
+		  '// Encrypt data:
+		  'Dim mykey As libsodium.PKI.EncryptionKey
+		  'mykey = mykey.Generate() ' random key for example
+		  'Dim theirkey As New libsodium.PKI.ForeignKey(mykey.Generate) ' the recipient's public key, random for example
+		  '
+		  'Dim nonce As MemoryBlock = mykey.RandomNonce ' must be stored/sent with the message
+		  '
+		  'Const kHelloWorld= "Hello, world!"
+		  '
+		  'Dim crypttext As MemoryBlock = libsodium.PKI.EncryptData(kHelloWorld, theirkey, mykey, nonce)
+		  '
+		  '// Decrypt data
+		  'Dim cleartext As MemoryBlock = libsodium.PKI.DecryptData(crypttext, theirkey, mykey, nonce)
+		  '
+		  'If cleartext.StringValue(0, cleartext.Size)= kHelloWorld Then
+		  'TextArea1.AppendText "ok!"+ EndOfLine
+		  'Else
+		  'TextArea1.AppendText "no match!"+ EndOfLine
+		  'End If
+		  'TextArea1.AppendText EndOfLine
+		  '
+		  'TextArea1.AppendText "PKI Encryption/Calculate the shared key:"+ EndOfLine
+		  'mykey = mykey.Generate() ' random key for example
+		  'Dim sharedkey As New libsodium.PKI.SharedSecret(theirkey, mykey)
+		  'Call sharedkey.Export SpecialFolder.Desktop.Child("sharedkey.key"), Nil, True
+		  'TextArea1.AppendText "ok!"+ EndOfLine
+		  'TextArea1.AppendText EndOfLine
+		  '
+		  'TextArea1.AppendText "PKI Encryption/Public-key authenticated encryption:"+ EndOfLine
+		  'Dim alice_secretkey As New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
+		  'Dim alice_publickey As New libsodium.PKI.ForeignKey(alice_secretkey)
+		  '
+		  'Dim bob_secretkey As New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
+		  'Dim bob_publickey As New libsodium.PKI.ForeignKey(bob_secretkey)
+		  '
+		  '// exchange public keys...
+		  'Dim bob_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(bob_publickey.Export)
+		  'Dim alice_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(alice_publickey.Export)
+		  '
+		  'crypttext= libsodium.PKI.EncryptData(kHelloWorld, bob_publickey_exchange, alice_secretkey, nonce)
+		  'cleartext= libsodium.PKI.DecryptData(crypttext, alice_publickey_exchange, bob_secretkey, nonce)
+		  '
+		  'If cleartext.StringValue(0, cleartext.Size)= kHelloWorld Then
+		  'TextArea1.AppendText "ok!"+ EndOfLine
+		  'Else
+		  'TextArea1.AppendText "no match!"+ EndOfLine
+		  'End If
+		  'TextArea1.AppendText EndOfLine
 		  
 		End Sub
 	#tag EndEvent

@@ -135,6 +135,9 @@ Protected Module SKI
 		      Return buffer
 		    End If
 		  ElseIf constructionType= TypeConstruction.AES256_GCM Then
+		    Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
+		    If Not HasAES256GCM Then Raise New PlatformNotSupportedException
+		    
 		    CheckSize(Nonce, crypto_aead_aes256gcm_NPUBBYTES)
 		    CheckSize(Key, crypto_aead_aes256gcm_KEYBYTES)
 		    
@@ -229,7 +232,8 @@ Protected Module SKI
 		      Return buffer
 		    End If
 		  ElseIf constructionType= TypeConstruction.AES256_GCM Then
-		    'If Not System.IsFunctionAvailable("crypto_aead_aes256gcm_encrypt", "libsodium") Then Break
+		    Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
+		    If Not HasAES256GCM Then Raise New PlatformNotSupportedException
 		    
 		    CheckSize(Nonce, crypto_aead_aes256gcm_NPUBBYTES)
 		    CheckSize(Key, crypto_aead_aes256gcm_KEYBYTES)

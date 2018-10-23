@@ -128,12 +128,12 @@ End
 		  
 		  If libsodium.Version.HasAESNI And libsodium.Version.HasPCLMul And libsodium.Version.HasAES256GCM Then
 		    TextArea1.AppendText "AES256GCM:"+ EndOfLine
-		    'Dim key As libsodium.SKI.SecretKey
-		    'key = key.Generate(libsodium.SKI.TypeConstruction.AES256_GCM) ' random key for example
-		    'Dim nonce As MemoryBlock = key.RandomNonce(libsodium.SKI.TypeConstruction.AES256_GCM) ' must be stored/sent with the message
-		    'Dim ciphertext As MemoryBlock = libsodium.SKI.EncryptData("test", "123456", key, nonce, False, libsodium.SKI.TypeConstruction.AES256_GCM)
-		    'Dim cleartext As MemoryBlock = libsodium.SKI.DecryptData(ciphertext, "123456", key, nonce, libsodium.SKI.TypeConstruction.AES256_GCM)
-		    'Break
+		    Dim key As libsodium.SKI.SecretKey
+		    key = key.Generate(libsodium.SKI.TypeConstruction.AES256_GCM) ' random key for example
+		    Dim nonce As MemoryBlock = key.RandomNonce(libsodium.SKI.TypeConstruction.AES256_GCM) ' must be stored/sent with the message
+		    Dim ciphertext As MemoryBlock = libsodium.SKI.EncryptData("test", "123456", key, nonce, False, libsodium.SKI.TypeConstruction.AES256_GCM)
+		    Dim cleartext As MemoryBlock = libsodium.SKI.DecryptData(ciphertext, "123456", key, nonce, libsodium.SKI.TypeConstruction.AES256_GCM)
+		    Break
 		  End If
 		  
 		  TextArea1.AppendText "ChaCha20_Poly1305:"+ EndOfLine

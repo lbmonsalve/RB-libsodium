@@ -6,8 +6,8 @@ Protected Module Version
 
 	#tag Method, Flags = &h1
 		Protected Function HasAES256GCM() As Boolean
-		  If System.IsFunctionAvailable("crypto_aead_aes256gcm_is_available", "libsodium") Then
-		    Return crypto_aead_aes256gcm_is_available = 0
+		  If libsodium.IsAvailable And System.IsFunctionAvailable("crypto_aead_aes256gcm_is_available", "libsodium") Then
+		    Return crypto_aead_aes256gcm_is_available = 1
 		  End If
 		End Function
 	#tag EndMethod

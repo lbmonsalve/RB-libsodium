@@ -1,8 +1,8 @@
 #tag Menu
-Begin Menu MenuBar1
+Begin Menu UnitTestMenuBar
    Begin MenuItem FileMenu
       SpecialMenu = 0
-      Text = "&Archivo"
+      Text = "&File"
       Index = -2147483648
       AutoEnable = True
       Begin QuitMenuItem FileQuit
@@ -16,19 +16,19 @@ Begin Menu MenuBar1
    End
    Begin MenuItem EditMenu
       SpecialMenu = 0
-      Text = "&Edición"
+      Text = "&Edit"
       Index = -2147483648
       AutoEnable = True
       Begin MenuItem EditUndo
          SpecialMenu = 0
-         Text = "Des&hacer"
+         Text = "&Undo"
          Index = -2147483648
          ShortcutKey = "Z"
          Shortcut = "Cmd+Z"
          MenuModifier = True
          AutoEnable = True
       End
-      Begin MenuItem 
+      Begin MenuItem UntitledMenu1
          SpecialMenu = 0
          Text = "-"
          Index = -2147483648
@@ -36,7 +36,7 @@ Begin Menu MenuBar1
       End
       Begin MenuItem EditCut
          SpecialMenu = 0
-         Text = "Cor&tar"
+         Text = "Cu&t"
          Index = -2147483648
          ShortcutKey = "X"
          Shortcut = "Cmd+X"
@@ -45,7 +45,7 @@ Begin Menu MenuBar1
       End
       Begin MenuItem EditCopy
          SpecialMenu = 0
-         Text = "&Copiar"
+         Text = "&Copy"
          Index = -2147483648
          ShortcutKey = "C"
          Shortcut = "Cmd+C"
@@ -54,7 +54,7 @@ Begin Menu MenuBar1
       End
       Begin MenuItem EditPaste
          SpecialMenu = 0
-         Text = "&Pegar"
+         Text = "&Paste"
          Index = -2147483648
          ShortcutKey = "V"
          Shortcut = "Cmd+V"
@@ -67,7 +67,7 @@ Begin Menu MenuBar1
          Index = -2147483648
          AutoEnable = True
       End
-      Begin MenuItem 
+      Begin MenuItem UntitledMenu0
          SpecialMenu = 0
          Text = "-"
          Index = -2147483648
@@ -75,10 +75,19 @@ Begin Menu MenuBar1
       End
       Begin MenuItem EditSelectAll
          SpecialMenu = 0
-         Text = "Seleccion&ar Todo"
+         Text = "Select &All"
          Index = -2147483648
          ShortcutKey = "A"
          Shortcut = "Cmd+A"
+         MenuModifier = True
+         AutoEnable = True
+      End
+      Begin MenuItem EditClearAll
+         SpecialMenu = 0
+         Text = "Clear All"
+         Index = -2147483648
+         ShortcutKey = "-"
+         Shortcut = "Cmd+-"
          MenuModifier = True
          AutoEnable = True
       End

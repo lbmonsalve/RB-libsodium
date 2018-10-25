@@ -22,7 +22,7 @@ Protected Module SKI
 		  ' Poly1305 message authentication code is prepended by the EncryptData method and will be
 		  ' validated by this method. The decrypted data is returned on success. On error returns Nil.
 		  '
-		  ' See: 
+		  ' See:
 		  ' https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html#combined-mode
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.DecryptData
 		  
@@ -59,7 +59,7 @@ Protected Module SKI
 		  ' https://download.libsodium.org/doc/secret-key_cryptography/authenticated_encryption.html#combined-mode
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.EncryptData
 		  
-		  If Nonce = Nil And Exportable Then Nonce = Key.RandomNonce
+		  If Nonce = Nil And Exportable Then Nonce = Key.RandomNonce()
 		  Return EncryptData(ClearText, Key.Value, Nonce, Exportable)
 		  
 		End Function
@@ -105,6 +105,42 @@ Protected Module SKI
 		End Function
 	#tag EndMethod
 
+
+	#tag Constant, Name = crypto_aead_aes256gcm_ABYTES, Type = Double, Dynamic = False, Default = \"16", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_aes256gcm_KEYBYTES, Type = Double, Dynamic = False, Default = \"32", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_aes256gcm_NPUBBYTES, Type = Double, Dynamic = False, Default = \"12", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_chacha20poly1305_ABYTES, Type = Double, Dynamic = False, Default = \"16", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_chacha20poly1305_ietf_ABYTES, Type = Double, Dynamic = False, Default = \"16", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_chacha20poly1305_ietf_KEYBYTES, Type = Double, Dynamic = False, Default = \"32", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_chacha20poly1305_ietf_NPUBBYTES, Type = Double, Dynamic = False, Default = \"12", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_chacha20poly1305_KEYBYTES, Type = Double, Dynamic = False, Default = \"32", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_chacha20poly1305_NPUBBYTES, Type = Double, Dynamic = False, Default = \"8", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_xchacha20poly1305_ietf_ABYTES, Type = Double, Dynamic = False, Default = \"16", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_xchacha20poly1305_ietf_KEYBYTES, Type = Double, Dynamic = False, Default = \"32", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = crypto_aead_xchacha20poly1305_ietf_NPUBBYTES, Type = Double, Dynamic = False, Default = \"24", Scope = Private
+	#tag EndConstant
 
 	#tag Constant, Name = crypto_auth_BYTES, Type = Double, Dynamic = False, Default = \"32", Scope = Private
 	#tag EndConstant

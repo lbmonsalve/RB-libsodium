@@ -79,7 +79,7 @@ Protected Class GenericHashDigest
 	#tag Method, Flags = &h0
 		Sub Process(NewData As MemoryBlock)
 		  ' Processes the NewData into a running hash.
-		  ' 
+		  '
 		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.GenericHashDigest.Process
 		  
@@ -102,7 +102,7 @@ Protected Class GenericHashDigest
 		 Shared Function RandomKey(Type As libsodium.HashType = libsodium.HashType.Generic) As MemoryBlock
 		  ' Returns unpredictable bytes that are suitable to be used as a key for GenericHashDigest.Constructor
 		  '
-		  ' See: 
+		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.GenericHashDigest.RandomKey
 		  
 		  If Not libsodium.IsAvailable Then Raise New SodiumException(ERR_UNAVAILABLE)
@@ -174,10 +174,10 @@ Protected Class GenericHashDigest
 	#tag Method, Flags = &h0
 		Function Value() As String
 		  ' Finalizes the digest operation and returns the hash value.
-		  ' Once you call this method the processor can accept no more input until 
+		  ' Once you call this method the processor can accept no more input until
 		  ' the processor is Reset().
 		  '
-		  ' See: 
+		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.GenericHashDigest.Value
 		  
 		  If mOutput <> Nil Then Return mOutput

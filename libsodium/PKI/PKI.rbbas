@@ -49,6 +49,10 @@ Protected Module PKI
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_kdf_derive_from_key Lib "libsodium" (subkey As Ptr, subkey_len As UInt32, subkey_id As UInt64, ctx As CString, key As Ptr) As Int32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function crypto_scalarmult Lib "libsodium" (Buffer As Ptr, PrivateKey As Ptr, PublicKey As Ptr) As Int32
 	#tag EndExternalMethod
 

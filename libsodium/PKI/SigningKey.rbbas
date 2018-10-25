@@ -3,8 +3,8 @@ Protected Class SigningKey
 Inherits libsodium.PKI.KeyPair
 	#tag Method, Flags = &h1000
 		Sub Constructor(PasswordData As libsodium.Password, Optional Salt As MemoryBlock, Limits As libsodium.ResourceLimits = libsodium.ResourceLimits.Interactive, HashAlgorithm As Int32 = libsodium.Password.ALG_ARGON2)
-		  ' Generates a key pair by deriving it from a salted hash of the password. The operation is 
-		  ' deterministic, such that calling this method twice with the same Password, Salt, and Limits 
+		  ' Generates a key pair by deriving it from a salted hash of the password. The operation is
+		  ' deterministic, such that calling this method twice with the same Password, Salt, and Limits
 		  ' parameters will produce the same output both times.
 		  '
 		  ' See:
@@ -207,5 +207,39 @@ Inherits libsodium.PKI.KeyPair
 	#tag EndNote
 
 
+	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Index"
+			Visible=true
+			Group="ID"
+			InitialValue="-2147483648"
+			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Left"
+			Visible=true
+			Group="Position"
+			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Name"
+			Visible=true
+			Group="ID"
+			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Super"
+			Visible=true
+			Group="ID"
+			InheritedFrom="Object"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Top"
+			Visible=true
+			Group="Position"
+			InitialValue="0"
+			InheritedFrom="Object"
+		#tag EndViewProperty
+	#tag EndViewBehavior
 End Class
 #tag EndClass

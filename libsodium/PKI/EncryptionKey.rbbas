@@ -53,7 +53,7 @@ Inherits libsodium.PKI.KeyPair
 		    Raise New SodiumException(ERR_CONVERSION_FAILED)
 		  End If
 		  
-		  If pub <> Nil Then 
+		  If pub <> Nil Then
 		    Me.Constructor(priv, pub) ' store the converted keys
 		  Else
 		    Me.Constructor(priv) ' derive the public key
@@ -63,8 +63,8 @@ Inherits libsodium.PKI.KeyPair
 
 	#tag Method, Flags = &h1001
 		Protected Sub Constructor(PrivateKeyData As MemoryBlock)
-		  ' Given a user's private key this method computes their public key using X25519, a 
-		  ' state-of-the-art Elliptic Curve Diffie-Hellman (ECDH) function suitable for a wide 
+		  ' Given a user's private key this method computes their public key using X25519, a
+		  ' state-of-the-art Elliptic Curve Diffie-Hellman (ECDH) function suitable for a wide
 		  ' variety of applications.
 		  '
 		  ' See:
@@ -108,6 +108,34 @@ Inherits libsodium.PKI.KeyPair
 		  
 		  Return New EncryptionKey(PrivateKeyData)
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Derive(Context As String = "_Default", SubkeyLen As UInt8 = 32) As libsodium.PKI.EncryptionKey
+		  ' The  crypto_kdf  API can derive up to 2^64 keys from a single master key and context, and individual subkeys can
+		  ' have an arbitrary length between 128 (16 bytes) and 512 bits (64 bytes).
+		  ' https://download.libsodium.org/doc/key_derivation/
+		  
+		  Static subkeyId As UInt64
+		  subkeyId= subkeyId+ 1
+		  
+		  Return Derive(subkeyId, Context, SubkeyLen)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Derive(SubkeyId As UInt64, Context As String = "_Default", SubkeyLen As UInt8 = 32) As libsodium.PKI.EncryptionKey
+		  ' The  crypto_kdf  API can derive up to 2^64 keys from a single master key and context, and individual subkeys can
+		  ' have an arbitrary length between 128 (16 bytes) and 512 bits (64 bytes).
+		  ' https://download.libsodium.org/doc/key_derivation/
+		  
+		  Dim subkey As New MemoryBlock(SubkeyLen)
+		  If crypto_kdf_derive_from_key(subkey, subkey.Size, SubkeyId, Context, PrivateKey) = 0 Then
+		    Return Derive(subkey)
+		  End If
+		  
+		  Return Nil
 		End Function
 	#tag EndMethod
 
@@ -195,10 +223,10 @@ Inherits libsodium.PKI.KeyPair
 
 	#tag Method, Flags = &h0
 		Function Operator_Compare(OtherKey As libsodium.PKI.EncryptionKey) As Integer
-		  ' This method overloads the comparison operator (=) allowing direct comparisons between 
-		  ' instances of EncryptionKey. The comparison operation itself is a constant-time binary 
+		  ' This method overloads the comparison operator (=) allowing direct comparisons between
+		  ' instances of EncryptionKey. The comparison operation itself is a constant-time binary
 		  ' comparison of the private key halves of both key pairs; the public halves are not compared.
-		  ' 
+		  '
 		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.PKI.EncryptionKey.Operator_Compare
 		  

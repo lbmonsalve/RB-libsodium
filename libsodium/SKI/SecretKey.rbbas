@@ -13,12 +13,13 @@ Inherits libsodium.SKI.KeyContainer
 		  If Salt = Nil Then Salt = FromPassword.RandomSalt(HashAlgorithm)
 		  Dim key As MemoryBlock = FromPassword.DeriveKey(crypto_secretbox_KEYBYTES, Salt, Limits, HashAlgorithm)
 		  Me.Constructor(key)
+		  
 		  mPasswdSalt = Salt
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1001
-		Protected Sub Constructor(KeyData As MemoryBlock)
+	#tag Method, Flags = &h1000
+		Sub Constructor(KeyData As MemoryBlock)
 		  CheckSize(KeyData, crypto_secretbox_KEYBYTES)
 		  // Calling the overridden superclass constructor.
 		  // Constructor(KeyData As MemoryBlock) -- From KeyContainer

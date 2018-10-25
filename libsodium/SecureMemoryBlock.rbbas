@@ -83,7 +83,7 @@ Class SecureMemoryBlock
 	#tag Method, Flags = &h0
 		Sub CString(Offset As UInt64, Assigns NewString As CString)
 		  If mProtectionLevel <> libsodium.ProtectionLevel.ReadWrite Then Raise New SodiumException(ERR_WRITE_DENIED)
-		  #If RBVersion > 2014.02 Then
+		  #If RBVersion > 2014.021 Then
 		    If Offset + CType(NewString, String).LenB > mSize Then Raise New SodiumException(ERR_TOO_LARGE)
 		  #else
 		    If Offset + NewString.LenB > mSize Then Raise New SodiumException(ERR_TOO_LARGE)
@@ -200,7 +200,7 @@ Class SecureMemoryBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsZero(Offset As Int32 = 0, Length As Int32 = -1) As Boolean
+		Function IsZero(Offset As Int32 = 0, Length As Int32 = - 1) As Boolean
 		  ' This method returns True if the SecureMemoryBlock contains only zeros. It returns False
 		  ' if non-zero bits are found. Execution time is constant for a given length.
 		  
@@ -280,7 +280,7 @@ Class SecureMemoryBlock
 	#tag Method, Flags = &h0
 		Sub PString(Offset As UInt64, Assigns NewString As PString)
 		  If mProtectionLevel <> libsodium.ProtectionLevel.ReadWrite Then Raise New SodiumException(ERR_WRITE_DENIED)
-		  #If RBVersion > 2014.02 Then
+		  #If RBVersion > 2014.021 Then
 		    If Offset + CType(NewString, String).LenB > mSize Then Raise New SodiumException(ERR_TOO_LARGE)
 		  #else
 		    If Offset + NewString.LenB > mSize Then Raise New SodiumException(ERR_TOO_LARGE)
@@ -426,7 +426,7 @@ Class SecureMemoryBlock
 	#tag Method, Flags = &h0
 		Sub WString(Offset As UInt64, Assigns NewString As WString)
 		  If mProtectionLevel <> libsodium.ProtectionLevel.ReadWrite Then Raise New SodiumException(ERR_WRITE_DENIED)
-		  #If RBVersion > 2014.02 Then
+		  #If RBVersion > 2014.021 Then
 		    If Offset + CType(NewString, String).LenB > mSize Then Raise New SodiumException(ERR_TOO_LARGE)
 		  #else
 		    If Offset + NewString.LenB > mSize Then Raise New SodiumException(ERR_TOO_LARGE)
@@ -437,7 +437,7 @@ Class SecureMemoryBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ZeroFill(Offset As Int32 = 0, Length As Int32 = -1)
+		Sub ZeroFill(Offset As Int32 = 0, Length As Int32 = - 1)
 		  ' This method fills the SecureMemoryBlock with zeroes, overwriting any previous data.
 		  
 		  If mPtr = Nil Then Return

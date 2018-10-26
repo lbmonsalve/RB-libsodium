@@ -153,6 +153,10 @@ Protected Module Version
 	#tag EndMethod
 
 
+	#tag Constant, Name = Version, Type = String, Dynamic = False, Default = \"0.0.181025", Scope = Protected
+	#tag EndConstant
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Index"

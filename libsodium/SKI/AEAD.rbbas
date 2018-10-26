@@ -57,8 +57,9 @@ Protected Module AEAD
 
 	#tag Method, Flags = &h21
 		Private Function DecryptData_AES256GCM(CipherText As MemoryBlock, Key As libsodium.SKI.SecretKey, Nonce As MemoryBlock, ByRef AdditionalData As MemoryBlock) As MemoryBlock
-		  Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
-		  If Not HasAES256GCM Then Raise New PlatformNotSupportedException
+		  'Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
+		  'If Not HasAES256GCM Then Raise New PlatformNotSupportedException
+		  
 		  CheckSize(Key.Value, crypto_aead_aes256gcm_KEYBYTES)
 		  CheckSize(Nonce, crypto_aead_aes256gcm_NPUBBYTES)
 		  
@@ -163,8 +164,9 @@ Protected Module AEAD
 
 	#tag Method, Flags = &h21
 		Private Function EncryptData_AES256GCM(ClearText As MemoryBlock, Key As libsodium.SKI.SecretKey, Nonce As MemoryBlock, ByRef AdditionalData As MemoryBlock) As MemoryBlock
-		  Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
-		  If Not HasAES256GCM Then Raise New PlatformNotSupportedException
+		  'Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
+		  'If Not HasAES256GCM Then Raise New PlatformNotSupportedException
+		  
 		  CheckSize(Key.Value, crypto_aead_aes256gcm_KEYBYTES)
 		  CheckSize(Nonce, crypto_aead_aes256gcm_NPUBBYTES)
 		  

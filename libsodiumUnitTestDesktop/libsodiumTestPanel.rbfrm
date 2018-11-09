@@ -26,7 +26,7 @@ Begin ContainerControl libsodiumTestPanel
    Begin BevelButton BevelButton1
       AcceptFocus     =   False
       AutoDeactivate  =   True
-      BackColor       =   &c00000000
+      BackColor       =   "&c00000000"
       Bevel           =   0
       Bold            =   False
       ButtonType      =   0
@@ -57,7 +57,7 @@ Begin ContainerControl libsodiumTestPanel
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextColor       =   &c00000000
+      TextColor       =   "&c00000000"
       TextFont        =   "System"
       TextSize        =   ""
       TextUnit        =   0
@@ -121,7 +121,7 @@ End
 #tag Events BevelButton1
 	#tag Event
 		Sub Action()
-		  TextArea1.AppendText "libsodium version: "+ libsodium.Version.VersionString+ EndOfLine+ EndOfLine
+		  TextArea1.AppendText "libsodium version: "+ libsodium.Configuration.VersionString+ EndOfLine+ EndOfLine
 		  
 		  
 		  'TextArea1.AppendText "Read secure memory..."+ EndOfLine
@@ -239,7 +239,7 @@ End
 		  
 		  TextArea1.AppendText "SKI Encryption AEAD:"+ EndOfLine
 		  
-		  If libsodium.Version.HasAESNI And libsodium.Version.HasPCLMul And libsodium.Version.HasAES256GCM Then
+		  If libsodium.Configuration.HasAES256GCM Then
 		    TextArea1.AppendText "AES256GCM:"+ EndOfLine
 		    Dim key As libsodium.SKI.SecretKey
 		    key = libsodium.SKI.AEAD.Generate(libsodium.SKI.AEAD.AEADType.AES256GCM) ' random key for example

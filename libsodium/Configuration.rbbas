@@ -1,5 +1,5 @@
 #tag Module
-Protected Module Version
+Protected Module Configuration
 	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function crypto_aead_aes256gcm_is_available Lib "libsodium" () As Int32
 	#tag EndExternalMethod
@@ -153,7 +153,7 @@ Protected Module Version
 	#tag EndMethod
 
 
-	#tag Constant, Name = Version, Type = String, Dynamic = False, Default = \"0.0.181025", Scope = Protected
+	#tag Constant, Name = Version, Type = String, Dynamic = False, Default = \"0.0.181109", Scope = Protected
 	#tag EndConstant
 
 

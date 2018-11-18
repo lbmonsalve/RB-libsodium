@@ -207,7 +207,7 @@ Protected Class KeyStream
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mType As libsodium.KeyStream.StreamType = libsodium.StreamType.XSalsa20
+		Protected mType As libsodium.StreamType = libsodium.StreamType.XSalsa20
 	#tag EndProperty
 
 

@@ -218,13 +218,16 @@ End
 		  'TextArea1.AppendText "PKI Encryption/Public-key authenticated encryption:"+ EndOfLine
 		  'Dim alice_secretkey As New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
 		  'Dim alice_publickey As New libsodium.PKI.ForeignKey(alice_secretkey)
+		  'Dim alice_publickeyExport As String= alice_publickey.Export
 		  '
 		  'Dim bob_secretkey As New libsodium.PKI.EncryptionKey(passwd, passwd.RandomSalt, libsodium.ResourceLimits.Interactive)
+		  'Dim bob_secretkeyExport As String= bob_secretkey.Export // JUST TEST, DON'T DO IT!!
 		  'Dim bob_publickey As New libsodium.PKI.ForeignKey(bob_secretkey)
+		  'Dim bob_publickeyExport As String= bob_publickey.Export
 		  '
 		  '// exchange public keys...
-		  'Dim bob_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(bob_publickey.Export)
-		  'Dim alice_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(alice_publickey.Export)
+		  'Dim bob_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(bob_publickeyExport)
+		  'Dim alice_publickey_exchange As libsodium.PKI.ForeignKey= libsodium.PKI.ForeignKey.Import(alice_publickeyExport)
 		  '
 		  'crypttext= libsodium.PKI.EncryptData(kHelloWorld, bob_publickey_exchange, alice_secretkey, nonce)
 		  'cleartext= libsodium.PKI.DecryptData(crypttext, alice_publickey_exchange, bob_secretkey, nonce)
@@ -235,6 +238,7 @@ End
 		  'TextArea1.AppendText "no match!"+ EndOfLine
 		  'End If
 		  'TextArea1.AppendText EndOfLine
+		  'Break
 		  
 		  
 		  TextArea1.AppendText "SKI Encryption AEAD:"+ EndOfLine
@@ -292,6 +296,14 @@ End
 		  Else
 		    TextArea1.AppendText "no match!"+ EndOfLine
 		  End If
+		  
+		  Dim keyExport As String= key.Export
+		  Dim keyValue As MemoryBlock= key.Value
+		  Dim keyImport As New libsodium.SKI.SecretKey(keyValue)
+		  
+		  If key= keyImport Then TextArea1.AppendText "key= keyImport, ok!"+ EndOfLine
+		  
+		  Break
 		End Sub
 	#tag EndEvent
 #tag EndEvents

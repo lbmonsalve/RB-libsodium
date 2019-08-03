@@ -13,7 +13,6 @@ Inherits libsodium.SKI.KeyContainer
 		  If Salt = Nil Then Salt = FromPassword.RandomSalt(HashAlgorithm)
 		  Dim key As MemoryBlock = FromPassword.DeriveKey(crypto_secretbox_KEYBYTES, Salt, Limits, HashAlgorithm)
 		  Me.Constructor(key)
-		  
 		  mPasswdSalt = Salt
 		End Sub
 	#tag EndMethod

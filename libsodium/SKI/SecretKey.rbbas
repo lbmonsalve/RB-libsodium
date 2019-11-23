@@ -1,6 +1,19 @@
 #tag Class
 Protected Class SecretKey
 Inherits libsodium.SKI.KeyContainer
+	#tag Method, Flags = &h1000
+		Sub Constructor(StreamData As libsodium.KeyStream, Optional Nonce As MemoryBlock)
+		  ' Generates a key by deriving it from the KeyStream+Nonce. The operation is deterministic, such
+		  ' that calling this method twice with the same parameters will produce the same output both times.
+		  '
+		  ' See:
+		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.SecretKey.Constructor
+		  
+		  If Nonce = Nil Then Nonce = StreamData.RandomNonce(StreamData.Type)
+		  Me.Constructor(StreamData.DeriveKey(crypto_secretbox_keybytes, Nonce))
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub Constructor(FromPassword As libsodium.Password, Optional Salt As MemoryBlock, Limits As libsodium.ResourceLimits = libsodium.ResourceLimits.Interactive, HashAlgorithm As Int32 = libsodium.Password.ALG_ARGON2)
 		  ' Generates a secret key by deriving it from a salted hash of the password. The operation is
@@ -11,7 +24,7 @@ Inherits libsodium.SKI.KeyContainer
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.SecretKey.Constructor
 		  
 		  If Salt = Nil Then Salt = FromPassword.RandomSalt(HashAlgorithm)
-		  Dim key As MemoryBlock = FromPassword.DeriveKey(crypto_secretbox_KEYBYTES, Salt, Limits, HashAlgorithm)
+		  Dim key As MemoryBlock = FromPassword.DeriveKey(crypto_secretbox_keybytes, Salt, Limits, HashAlgorithm)
 		  Me.Constructor(key)
 		  mPasswdSalt = Salt
 		End Sub
@@ -19,7 +32,7 @@ Inherits libsodium.SKI.KeyContainer
 
 	#tag Method, Flags = &h1001
 		Protected Sub Constructor(KeyData As MemoryBlock)
-		  CheckSize(KeyData, crypto_secretbox_KEYBYTES)
+		  CheckSize(KeyData, crypto_secretbox_keybytes)
 		  // Calling the overridden superclass constructor.
 		  // Constructor(KeyData As MemoryBlock) -- From KeyContainer
 		  Super.Constructor(KeyData)
@@ -109,7 +122,7 @@ Inherits libsodium.SKI.KeyContainer
 		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.SKI.SecretKey.Import
 		  
-		  If libsodium.Exporting.GetType(ExportedKey) <> libsodium.Exporting.ExportableType.Secret Then Raise New SodiumException(ERR_KEYTYPE_MISMATCH)
+		  libsodium.Exporting.AssertType(ExportedKey, libsodium.Exporting.ExportableType.Secret)
 		  Dim sk As MemoryBlock = libsodium.Exporting.Import(ExportedKey, Passwd)
 		  If sk <> Nil Then Return New SecretKey(sk)
 		End Function
@@ -153,10 +166,10 @@ Inherits libsodium.SKI.KeyContainer
 
 
 	#tag Note, Name = Usage
-		This class contains a symmetric key for use with secret key encryption and message authentication. Encryption, 
+		This class contains a key for use with symmetric encryption and message authentication. Encryption, 
 		decryption, and MAC generation/validation use the same key, so it must be kept secret at all times.
 		
-		You may use a SecretKey with these utility methods:
+		You may use a SecretKey with the SecretStream class or these utility methods:
 		
 		  * libsodium.SKI.EncryptData: Encrypt a message and generate its MAC; the MAC is prepended to the 
 		    encrypted message and returned.
@@ -186,6 +199,8 @@ Inherits libsodium.SKI.KeyContainer
 		    Dim n As MemoryBlock = sk.RandomNonce()
 		    Dim msg As MemoryBlock = libsodium.SKI.EncryptData("Hello, world!", sk, n)
 		    MsgBox(libsodium.SKI.DecryptData(msg, sk, n))
+		
+		See also the libsodium.IncrementNonce, libsodium.CombineNonce, and libsodium.CompareNonce utility methods.
 	#tag EndNote
 
 

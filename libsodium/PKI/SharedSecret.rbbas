@@ -12,9 +12,9 @@ Inherits libsodium.SKI.KeyContainer
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.PKI.SharedSecret.Constructor
 		  
 		  If Not libsodium.IsAvailable Then Raise New SodiumException(ERR_UNAVAILABLE)
-		  CheckSize(RecipientPublicKey.Value, crypto_box_PUBLICKEYBYTES)
+		  CheckSize(RecipientPublicKey.Value, crypto_box_publickeybytes)
 		  
-		  Dim buffer As New MemoryBlock(crypto_box_BEFORENMBYTES)
+		  Dim buffer As New MemoryBlock(crypto_box_beforenmbytes)
 		  If crypto_box_beforenm(buffer, RecipientPublicKey.Value, SenderPrivateKey.PrivateKey) <> 0 Then
 		    Raise New SodiumException(ERR_COMPUTATION_FAILED)
 		  End If
@@ -24,7 +24,7 @@ Inherits libsodium.SKI.KeyContainer
 
 	#tag Method, Flags = &h1001
 		Protected Sub Constructor(SharedKey As MemoryBlock)
-		  CheckSize(SharedKey, crypto_box_BEFORENMBYTES)
+		  CheckSize(SharedKey, crypto_box_beforenmbytes)
 		  // Calling the overridden superclass constructor.
 		  // Constructor(KeyData As MemoryBlock) -- From KeyContainer
 		  Super.Constructor(SharedKey)
@@ -52,9 +52,9 @@ Inherits libsodium.SKI.KeyContainer
 		  ' https://download.libsodium.org/doc/advanced/scalar_multiplication.html
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.PKI.SharedSecret.DeriveSharedSecret
 		  
-		  CheckSize(RecipientPublicKey, crypto_scalarmult_BYTES)
+		  CheckSize(RecipientPublicKey, crypto_scalarmult_bytes)
 		  
-		  Dim buffer As New MemoryBlock(crypto_scalarmult_BYTES)
+		  Dim buffer As New MemoryBlock(crypto_scalarmult_bytes)
 		  If crypto_scalarmult(buffer, SenderPrivateKey.PrivateKey, RecipientPublicKey) = 0 Then
 		    Return buffer
 		  End If
@@ -117,7 +117,7 @@ Inherits libsodium.SKI.KeyContainer
 		  ' See:
 		  ' https://github.com/charonn0/RB-libsodium/wiki/libsodium.PKI.SharedSecret.Import
 		  
-		  If libsodium.Exporting.GetType(ExportedKey) <> libsodium.Exporting.ExportableType.SharedSecret Then Raise New SodiumException(ERR_KEYTYPE_MISMATCH)
+		  libsodium.Exporting.AssertType(ExportedKey, libsodium.Exporting.ExportableType.SharedSecret)
 		  Dim secret As MemoryBlock = libsodium.Exporting.Import(ExportedKey, Passwd)
 		  If secret <> Nil Then Return New SharedSecret(secret)
 		End Function

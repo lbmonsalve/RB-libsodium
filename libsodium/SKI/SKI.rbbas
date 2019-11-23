@@ -37,6 +37,14 @@ Protected Module SKI
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_auth_bytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_auth_keybytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function crypto_auth_verify Lib "libsodium" (Signature As Ptr, Message As Ptr, MessageLength As UInt64, SecretKey As Ptr) As Int32
 	#tag EndExternalMethod
 
@@ -45,7 +53,59 @@ Protected Module SKI
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretbox_keybytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretbox_macbytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretbox_noncebytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
 		Private Soft Declare Function crypto_secretbox_open_easy Lib "libsodium" (Buffer As Ptr, Message As Ptr, MessageLength As UInt64, Nonce As Ptr, SecretKey As Ptr) As Int32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_abytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_headerbytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_init_pull Lib "libsodium" (State As Ptr, Header As Ptr, Key As Ptr) As Int32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_init_push Lib "libsodium" (State As Ptr, Header As Ptr, Key As Ptr) As Int32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_keybytes Lib "libsodium" () As UInt32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub crypto_secretstream_xchacha20poly1305_keygen Lib "libsodium" (Key As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_pull Lib "libsodium" (State As Ptr, Buffer As Ptr, ByRef BufferSize As UInt64, ByRef Tag As UInt8, CipherText As Ptr, CipherTextSize As UInt64, AdditionalData As Ptr, AdditionalDataSize As UInt64) As Int32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_push Lib "libsodium" (State As Ptr, Buffer As Ptr, ByRef BufferLength As UInt64, Message As Ptr, MessageLength As UInt64, AdditionalData As Ptr, AdditionalDataLength As UInt64, Tag As UInt8) As Int32
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Sub crypto_secretstream_xchacha20poly1305_rekey Lib "libsodium" (State As Ptr)
+	#tag EndExternalMethod
+
+	#tag ExternalMethod, Flags = &h21
+		Private Soft Declare Function crypto_secretstream_xchacha20poly1305_statebytes Lib "libsodium" () As UInt32
 	#tag EndExternalMethod
 
 	#tag Method, Flags = &h1
@@ -85,10 +145,10 @@ Protected Module SKI
 		      CipherText = libsodium.Exporting.DecodeMessage(CipherText)
 		    End If
 		  End If
-		  CheckSize(Nonce, crypto_secretbox_NONCEBYTES)
-		  CheckSize(Key, crypto_secretbox_KEYBYTES)
+		  CheckSize(Nonce, crypto_secretbox_noncebytes)
+		  CheckSize(Key, crypto_secretbox_keybytes)
 		  
-		  Dim buffer As New MemoryBlock(CipherText.Size - crypto_secretbox_MACBYTES)
+		  Dim buffer As New MemoryBlock(CipherText.Size - crypto_secretbox_macbytes)
 		  If crypto_secretbox_open_easy(Buffer, CipherText, CipherText.Size, Nonce, Key) = 0 Then
 		    Return buffer
 		  End If
@@ -185,10 +245,10 @@ Protected Module SKI
 
 	#tag Method, Flags = &h21
 		Private Function EncryptData(ClearText As MemoryBlock, Key As MemoryBlock, Nonce As MemoryBlock, Exportable As Boolean = False) As MemoryBlock
-		  CheckSize(Nonce, crypto_secretbox_NONCEBYTES)
-		  CheckSize(Key, crypto_secretbox_KEYBYTES)
+		  CheckSize(Nonce, crypto_secretbox_noncebytes)
+		  CheckSize(Key, crypto_secretbox_keybytes)
 		  
-		  Dim buffer As New MemoryBlock(ClearText.Size + crypto_secretbox_MACBYTES)
+		  Dim buffer As New MemoryBlock(ClearText.Size + crypto_secretbox_macbytes)
 		  If crypto_secretbox_easy(buffer, ClearText, ClearText.Size, Nonce, Key) = 0 Then
 		    If Exportable Then buffer = libsodium.Exporting.EncodeMessage(buffer, Nonce)
 		    Return buffer
@@ -254,9 +314,9 @@ Protected Module SKI
 		  ' Generate a HMAC-SHA512256 authentication code for the Message using SecretKey.
 		  ' See: https://download.libsodium.org/doc/secret-key_cryptography/secret-key_authentication.html
 		  
-		  CheckSize(Key.Value, crypto_auth_KEYBYTES)
+		  CheckSize(Key.Value, crypto_auth_keybytes)
 		  
-		  Dim signature As New MemoryBlock(crypto_auth_BYTES)
+		  Dim signature As New MemoryBlock(crypto_auth_bytes)
 		  If crypto_auth(signature, Message, Message.Size, Key.Value) = 0 Then
 		    If Exportable Then signature = libsodium.Exporting.Export(signature, libsodium.Exporting.ExportableType.HMAC)
 		    Return signature
@@ -269,7 +329,7 @@ Protected Module SKI
 		  ' Validate a HMAC-SHA512256 authentication code for the Message that was generated using SecretKey
 		  ' See: https://download.libsodium.org/doc/secret-key_cryptography/secret-key_authentication.html
 		  
-		  CheckSize(Key.Value, crypto_auth_KEYBYTES)
+		  CheckSize(Key.Value, crypto_auth_keybytes)
 		  If Left(MAC, 5) = "-----" Then MAC = libsodium.Exporting.Import(MAC)
 		  If Left(Message, 5) = "-----" Then Message = libsodium.Exporting.Import(Message)
 		  Return crypto_auth_verify(MAC, Message, Message.Size, Key.Value) = 0

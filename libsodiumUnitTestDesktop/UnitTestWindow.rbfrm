@@ -51,7 +51,7 @@ Begin Window UnitTestWindow
       TextUnit        =   0
       Top             =   0
       Underline       =   ""
-      Value           =   0
+      Value           =   1
       Visible         =   True
       Width           =   800
       Begin UnitTestPanel UnitTestPanel1

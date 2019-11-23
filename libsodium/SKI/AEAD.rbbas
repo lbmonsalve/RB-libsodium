@@ -5,7 +5,7 @@ Protected Module AEAD
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
-		Private Soft Declare Function crypto_aead_aes256gcm_encrypt Lib "libsodium" (Buffer As Ptr, BufferSize As UInt64, Message As Ptr, MessageSize As UInt64, AdditionalData As Ptr, AdditionalDataSize As UInt64, Reserved As Ptr, Nonce As Ptr, SecretKey As Ptr) As Int32
+		Private Soft Declare Function crypto_aead_aes256gcm_encrypt Lib "libsodium" (Buffer As Ptr, ByRef BufferSize As UInt64, Message As Ptr, MessageSize As UInt64, AdditionalData As Ptr, AdditionalDataSize As UInt64, Reserved As Ptr, Nonce As Ptr, SecretKey As Ptr) As Int32
 	#tag EndExternalMethod
 
 	#tag ExternalMethod, Flags = &h21
@@ -101,7 +101,7 @@ Protected Module AEAD
 		  CheckSize(Key.Value, crypto_aead_chacha20poly1305_IETF_KEYBYTES)
 		  CheckSize(Nonce, crypto_aead_chacha20poly1305_IETF_NPUBBYTES)
 		  
-		  Dim buffer As New MemoryBlock(CipherText.Size - crypto_aead_chacha20poly1305_IETF_ABYTES)
+		  Dim buffer As New MemoryBlock(CipherText.Size - crypto_aead_aes256gcm_ABYTES)
 		  Dim buffersz As UInt64 = buffer.Size
 		  
 		  If AdditionalData <> Nil Then
@@ -164,18 +164,20 @@ Protected Module AEAD
 
 	#tag Method, Flags = &h21
 		Private Function EncryptData_AES256GCM(ClearText As MemoryBlock, Key As libsodium.SKI.SecretKey, Nonce As MemoryBlock, ByRef AdditionalData As MemoryBlock) As MemoryBlock
-		  'Static HasAES256GCM As Boolean = libsodium.Version.HasAES256GCM
-		  'If Not HasAES256GCM Then Raise New PlatformNotSupportedException
+		  Static HasAES256GCM As Boolean = libsodium.Configuration.HasAES256GCM
+		  If Not HasAES256GCM Then Raise New PlatformNotSupportedException
 		  
 		  CheckSize(Key.Value, crypto_aead_aes256gcm_KEYBYTES)
 		  CheckSize(Nonce, crypto_aead_aes256gcm_NPUBBYTES)
 		  
-		  Dim buffer As New MemoryBlock(ClearText.Size + crypto_aead_chacha20poly1305_IETF_ABYTES)
+		  Dim buffer As New MemoryBlock(ClearText.Size + crypto_aead_aes256gcm_ABYTES)
+		  Dim buffersz As UInt64 = buffer.Size
+		  
 		  If AdditionalData <> Nil Then
-		    If crypto_aead_aes256gcm_encrypt(buffer, buffer.Size, ClearText, ClearText.Size, _
+		    If crypto_aead_aes256gcm_encrypt(buffer, buffersz, ClearText, ClearText.Size, _
 		      AdditionalData, AdditionalData.Size, Nil, Nonce, Key.Value) = 0 Then Return buffer
 		    Else
-		      If crypto_aead_aes256gcm_encrypt(buffer, buffer.Size, ClearText, ClearText.Size, _
+		      If crypto_aead_aes256gcm_encrypt(buffer, buffersz, ClearText, ClearText.Size, _
 		        Nil, 0, Nil, Nonce, Key.Value) = 0 Then Return buffer
 		      End If
 		End Function
